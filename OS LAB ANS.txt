@@ -1,0 +1,508 @@
+1)//PRODUCER CONSUMER PROBLEM
+#include <iostream>
+using namespace std;
+
+int count = 0; 
+int front = 0; 
+int rear = 0; 
+char buffer[25]; 
+int p_p = 0; 
+int c_p = 0; 
+
+void producer(int n); 
+void consumer(int n); 
+void view(int n); 
+
+void producer(int n) {
+    char item; 
+    if (count < n) {
+        cout << "Enter data: "; 
+        cin >> item; 
+        buffer[front] = item; 
+        front = (front + 1) % 5; 
+        count++; 
+        if (c_p == 1 && count == 1) { 
+            cout << "\nConsumer is now ready"; 
+        } 
+    } else { 
+        cout << "\nBuffer is full..."; 
+        p_p = 1; 
+    } 
+}
+
+void consumer(int n) { 
+    char item; 
+    if (count > 0) { 
+        item = buffer[rear]; 
+        buffer[rear] = ' '; 
+        cout << "\nC: " << item; 
+        rear = (rear + 1) % 5; 
+        count--; 
+        if (p_p == 1 && count == 4) { 
+            cout << "\nProducer is now ready"; 
+        } 
+    } else { 
+        cout << "\nBuffer is empty..."; 
+        c_p = 1; 
+    } 
+}
+
+void view(int n) { 
+    cout << "\nData of buffer: "; 
+    for (int i = 0; i < n; i++) { 
+        cout << "- " << buffer[i] << " "; 
+    } 
+}
+
+int main() { 
+    int i, n, ch, f = 0; 
+    cout << "\nENTER THE COUNT FOR THE BUFFER: "; 
+    cin >> n; 
+    cout << "\nOptions:"; 
+    cout << "\n1: Producer item"; 
+    cout << "\n2: Consumer item"; 
+    cout << "\n3: To view buffer"; 
+    cout << "\n4: Exit"; 
+
+    do { 
+        cout << "\nEnter your choice: "; 
+        cin >> ch; 
+        switch (ch) { 
+            case 1: producer(n); 
+                    break; 
+            case 2: consumer(n); 
+                    break; 
+            case 3: view(n); 
+                    break; 
+            case 4: f = 1; 
+                    break; 
+            default: cout << "\nEnter correct choice"; 
+                     break; 
+        } 
+    } while (f == 0); 
+
+    return 0; 
+}
+
+
+-----------------------------------------------------------------------------
+
+
+
+2)// priority cpu scheduling
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int n = 5;
+    int p[5],p_priority[5];
+    int bt[5], priority[5], sorted_priority[5], bt_priority[5];
+    
+    for(int i = 0; i < n; i++) {
+        cout << endl << "Enter the burst time of " << i + 1 << " process: ";
+        cin >> bt[i];
+        cout << endl << "Enter the priority of " << i + 1 << " process: ";
+        cin >> priority[i];
+        p[i]=i+1;
+        p_priority[i]=0;
+        sorted_priority[i] = priority[i];
+    }
+    
+    
+    
+    // Sort the priorities
+    sort(sorted_priority, sorted_priority + n);
+    
+    // Match sorted priorities with original priorities
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            if(sorted_priority[i] == priority[j]) {
+                p_priority[i]=p[j];
+                bt_priority[i] = bt[j];
+                // Mark the priority as processed
+                priority[j] = -1;
+                
+                break;
+            }
+        }
+    }
+    
+    int wt[5], tat[5];
+    wt[0] = 0;
+    tat[0] = bt_priority[0];
+    
+    for(int i = 1; i < n; i++) {
+        wt[i] = wt[i-1] + bt_priority[i-1];
+        tat[i] = wt[i] + bt_priority[i];
+    }
+    float avgtat=0.00,avgwt=0.00;
+    cout << endl << "Process  " << "BT  " << "WT  " << "TAT     "<<endl;
+    for(int i = 0; i < n; i++) {
+        cout <<"p"<<p_priority[i]<< "        " << bt_priority[i] << "   " << wt[i] << "   " << tat[i] << endl;
+        avgtat+=tat[i];
+        avgwt+=wt[i];
+    }
+    cout<<"Avg tat:"<<(avgtat/5.00)<<endl<<"avg wt:"<<(avgwt/5.00);
+    
+    return 0;
+}
+
+
+-------------------------------------------------------------------------------------------
+
+
+3)#odd or even
+read n
+a=expr $n % 2
+if [ $a -eq 0 ]
+then
+echo $n is even
+else
+echo $n is odd
+fi
+
+
+
+-------------------------------------------------------------------------------------------
+
+4)# greater among 3 no
+read a b c
+
+if [ "$a" -gt "$b" -a "$a" -gt "$c" ]; then
+    echo "$a is greater"
+elif [ "$b" -gt "$c" ]; then
+    echo "$b is greater"
+else
+    echo "$c is greater"
+fi
+
+-------------------------------------------------------------------
+
+5)#factorial of a number
+read n;
+fact=1;
+for((i=1;i<=n;i++))
+do
+fact=$((fact*i));
+done
+echo The factorial of $n is $fact
+
+-----------------------------------------------------------------
+
+
+6)//PAGE FAULT FIFO
+#include<algorithm>
+#include<iostream>
+using namespace std;
+int main(){
+    int n;
+    cin>>n;
+    int p[n];
+    for(int i=0;i<n;i++){
+        cin>>p[i];
+    }
+    int a=-1,b=-1,c=-1,pf=0;
+    for(int i=0;i<n;i++){
+        if(p[i]==a){
+           continue;
+        }
+        else if(p[i]==b){
+        continue;
+        }
+        else if(p[i]==c){
+            continue;
+        }
+        else{
+            pf++;
+            if(pf%3==1){
+                a=p[i];
+            }
+            else if(pf%3==2){
+                b=p[i];
+            }
+            else{
+                c=p[i];
+            }
+        }
+        cout<<a<<"  "<<b<<"  "<<c<<endl;
+    }
+    cout<<"No of Page fault: "<<pf;
+}
+
+
+------------------------------------------------------------------------------
+7)//FORK AND EXEC
+#include <unistd.h> 
+#include <iostream> 
+#include <cstdlib> 
+
+using namespace std; 
+
+int main() { 
+    int pid; 
+    pid = fork(); 
+    if (pid < 0) { 
+        cerr << "The fork cannot be created" << endl; 
+        exit(1); 
+    } else if (pid == 0) { 
+        execlp("/bin/ls", "ls", NULL); 
+        cout << "The process id of the child: " << getpid() << endl; 
+        cout << "The process id of the parent: " << getppid() << endl;
+    } else { 
+        cout << "The process id of the parent: " << getpid() << endl; // Prints the parent's process ID.
+        cout << "The process id of the grandparent: " << getppid() << endl; // Prints the grandparent's process ID.
+    }
+
+    return 0; 
+}
+
+-----------------------------------------------------------------------------------------
+8)//BANKERS
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Enter the number of processes: ";
+    int n;
+    cin >> n;
+
+    cout << "Enter the total number of resources: ";
+    int r;
+    cin >> r;
+
+    cout << "Enter the maximum matrix for all the processes:\n";
+    int max[n][r];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < r; j++) {
+            cin >> max[i][j];
+        }
+    }
+
+    cout << "Enter the allocation matrix for all the processes:\n";
+    int allo[n][r];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < r; j++) {
+            cin >> allo[i][j];
+        }
+    }
+
+    cout << "Enter the available resources: ";
+    int avail[r];
+    for (int i = 0; i < r; i++) {
+        cin >> avail[i];
+    }
+
+    int need[n][r];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < r; j++) {
+            need[i][j] = max[i][j] - allo[i][j];
+        }
+    }
+
+    int seq[n], flag[n];
+    for (int i = 0; i < n; i++) {
+        flag[i] = 0; // Initialize the flag to indicate that no process has finished
+        seq[i] = -1; // Initialize the sequence array
+    }
+
+    int safeCount = 0; // Number of processes that have been allocated resources safely
+    for (int k = 0; k < n; k++) {
+        bool safeState = false;
+        for (int i = 0; i < n; i++) {
+            if (flag[i] == 0) { // Process not finished
+                bool canAllocate = true;
+                for (int j = 0; j < r; j++) {
+                    if (need[i][j] > avail[j]) {
+                        canAllocate = false;
+                        break;
+                    }
+                }
+                if (canAllocate) {
+                    for (int j = 0; j < r; j++) {
+                        avail[j] += allo[i][j]; // Release resources
+                    }
+                    seq[safeCount++] = i;
+                    flag[i] = 1; // Mark process as finished
+                    safeState = true;
+                }
+            }
+        }
+        if (!safeState) {
+            break; // If no process could be allocated in this iteration, break the loop
+        }
+    }
+
+    if (safeCount < n) {
+        cout << "The system is not in a safe state" << endl;
+    } else {
+        cout << "The system is in a safe state.\nSafe sequence is: ";
+        for (int i = 0; i < n; i++) {
+            cout << "P" << seq[i];
+            if (i != n - 1) cout << " -> ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
+
+----------------------------------------------------------------------------------
+
+9)//FCFS DISK SCHEDULING
+#include<iostream>
+using namespace std;
+int main(){
+    cout<<"Enter the size of the queue"<<endl;
+    int n;
+    cin>>n;
+    cout<<endl<<"Enter the queue elements"<<endl;
+    int a[n];
+    for(int i=0;i<n;i++){
+        cin>>a[i];
+    }
+    cout<<"Enter the initial head position "<<endl;
+    int head;
+    cin>>head;
+   int count=0;
+    count+=abs(head-a[0]);
+   
+    for(int i=0;i<n-1;i++){
+       count+=abs(a[i]-a[i+1]);
+    }
+    cout<<"Number of cyclinders are "<<count;
+}
+
+---------------------------------------------------------------------------------------
+10)//FCFS/FIFO CPU SCHEDULING ALGORITHM
+#include<iostream>
+using namespace std;
+int main(){
+    cout<<"Enter Jobs:"<<endl;
+    string a[5];
+    for(int i=0;i<5;i++)
+        cin>>a[i];
+        
+    cout<<"Enter the burst time:"<<endl;
+    
+    int b[5];
+    for(int i=0;i<5;i++)
+        cin>>b[i];
+    
+    int wt[5];
+    int tat[5];
+    wt[0]=0;
+    tat[0]=b[0];
+    float avgwt=0.00;
+    float avgtat=0.00;
+    for(int i=1;i<5;i++){
+       tat[i]=b[i]+tat[i-1];
+       wt[i]=wt[i-1]+b[i-1];
+    }
+    cout<<"Process   "<<"Burst time   "<<"Waiting Time    "<<"Turn around Time"<<endl;
+    for(int i=0;i<5;i++){
+        avgtat+=tat[i];
+        avgwt+=wt[i];
+       cout<<a[i]<<"            "<<b[i]<<"          "<<wt[i]<<"          "<<tat[i]<<endl;
+    }
+    
+    cout<<"Average Waiting Time = "<<(avgwt/5)<<endl;
+    cout<<"Average Turn Ariund time = "<<(avgtat/5);
+    
+}
+
+---------------------------------------------------------------------------------------
+11)//SJF CPU SCHEDULING ALGORITHM
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main(){
+    cout<<"Enter Jobs:"<<endl;
+    string p[5],psjf[5];
+    for(int i=0;i<5;i++)
+        cin>>p[i];
+        
+    cout<<"Enter the burst time:"<<endl;
+    
+    int bt[5],btsjf[5];
+    for(int i=0;i<5;i++){
+        cin>>bt[i];
+        btsjf[i]=bt[i];
+    }
+    sort(btsjf,btsjf+5);
+    for(int i=0;i<5;i++){
+        for(int j=0;j<5;j++){
+            if(btsjf[i]==bt[j]&&bt[j]!=-1){
+                psjf[i]=p[j];
+                bt[j]=-1;
+            }
+        }
+    }
+        
+  
+    
+    
+    int wt[5];
+    int tat[5];
+    wt[0]=0;
+    tat[0]=btsjf[0];
+    float avgwt=0.00;
+    float avgtat=0.00;
+    for(int i=1;i<5;i++){
+      tat[i]=btsjf[i]+tat[i-1];
+      wt[i]=wt[i-1]+btsjf[i-1];
+    }
+    cout<<"Process   "<<"Burst time   "<<"Waiting Time    "<<"Turn around Time"<<endl;
+    for(int i=0;i<5;i++){
+        avgtat+=tat[i];
+        avgwt+=wt[i];
+       cout<<psjf[i]<<"            "<<btsjf[i]<<"          "<<wt[i]<<"          "<<tat[i]<<endl;
+    }
+    
+    cout<<"Average Waiting Time = "<<(avgwt/5)<<endl;
+    cout<<"Average Turn Ariund time = "<<(avgtat/5);
+    
+}
+----------------------------------------------------------------------------------------
+12)#SUM OF NUMBERS
+read n
+i=$n
+sum=0
+while [ $n -gt 0 ]
+do 
+digit=$(( n%10 ))
+sum=$(( sum+$digit ))
+n=$(( n/10 ))
+done
+echo "the sum of $i is $sum"
+
+-----------------------------------------------------------------------------------------
+
+13)#LEAP YEAR
+read n
+a=expr $n % 4
+if [ $a -eq 0 ]
+then
+echo $n is leap year
+else
+echo $n is not a leap year
+fi
+
+----------------------------------------------------------------------------------------
+14) FIBONACCI SERIES
+
+read n
+a=0
+b=1
+echo "The Fibonacci series is : "
+  
+for((i=0;i<n;i++))
+do
+echo -n "$a "
+f=$((a+b))
+a=$b
+b=$f
+done
+
+----------------------------------------------------------------------------------------
+
