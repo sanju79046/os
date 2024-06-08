@@ -505,4 +505,23 @@ b=$f
 done
 
 ----------------------------------------------------------------------------------------
-
+15)SYSTEM CALLS
+//SYSTEM CALL
+#include <stdio.h> 
+#include <sys/stat.h> 
+#include <stdlib.h> 
+int main() 
+{ 
+struct stat s; 
+int a; int b; 
+if(stat("suba",&s)==(-1)) 
+{ 
+perror("Error: cannot stat file"); 
+exit(0); 
+} 
+a=s.st_blksize; 
+b=s.st_size; 
+printf("ALLOCATED SIZE OF THE FILE :%d\nActual size of the file :%d\n",a,b); 
+return 0; 
+} 
+------------------------------------------------------------------------------
